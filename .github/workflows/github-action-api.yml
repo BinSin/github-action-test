@@ -75,8 +75,8 @@ jobs:
           #port: 22
           #key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_REPOSITORY }}/dev
             docker rm -f $(docker ps --filter label="project=github-action-dev" -q)
+            docker pull ${{ secrets.DOCKER_REPOSITORY }}/dev
             docker run -d -v /app_log/github-action-dev:/app_log/github-action-dev -p 8080:8080 ${{ secrets.DOCKER_REPOSITORY }}/dev
             docker image prune -f
 
