@@ -42,7 +42,7 @@ jobs:
 
       ## gradle build
       - name: Build with Gradle
-        run: ./gradlew api:build -x test
+        run: ./gradlew build -x test
 
       ## Dockerfile을 통해 이미지를 빌드하고 이를 docker repository 로 push
       ## docker repository: ${{ secrets.DOCKER_REPOSITORY }}/(repository name)
