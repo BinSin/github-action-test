@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  API-CI-CD:
+  CI-CD-TEST:
     runs-on: ubuntu-latest
     steps:
 
@@ -85,7 +85,7 @@ jobs:
         id: deploy-prod
         if: contains(github.ref, 'master')
         with:
-          host: ${{ secrets.HOST_DEV }}
+          host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.USERNAME_PROD }}
           password: ${{ secrets.PASSWORD_PROD }}
           #port: 22
