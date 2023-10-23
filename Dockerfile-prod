@@ -4,8 +4,8 @@ FROM openjdk:17-alpine
 VOLUME ["/app_log/github-action-prod"]
 LABEL project="github-action-prod"
 
-ADD api/build/libs/github-action-prod.jar github-action-prod.jar
+ADD build/libs/github-action-test.jar github-action-test.jar
 EXPOSE 8080
-RUN sh -c 'touch /github-action-prod.jar'
+RUN sh -c 'touch /github-action-test.jar'
 ENV JAVA_OPTS="-Dspring.profiles.active=prod"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /github-action-prod.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /github-action-test.jar"]
