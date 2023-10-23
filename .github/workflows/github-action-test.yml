@@ -46,13 +46,10 @@ jobs:
 
       ## docker login
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v2
         with:
-          registry: public.ecr.aws
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-        env:
-          AWS_REGION: ap-northeast-2
 
       ## Dockerfile을 통해 이미지를 빌드하고 이를 docker repository 로 push
       ## docker repository: ${{ secrets.DOCKER_REPOSITORY }}/(repository name)
