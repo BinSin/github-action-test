@@ -45,7 +45,7 @@ jobs:
         run: ./gradlew build -x test
 
       ## docker login
-      - name: Login to NCP Container Registry
+      - name: Login to EC2 Container Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ secrets.DOCKER_REPOSITORY }}
