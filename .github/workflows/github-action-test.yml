@@ -57,14 +57,14 @@ jobs:
       - name: Docker build & push to dev
         if: contains(github.ref, 'dev')
         run: |
-          docker tag latest ${{ secrets.DOCKER_REPOSITORY_DEV }}:latest
+#          docker tag latest ${{ secrets.DOCKER_REPOSITORY_DEV }}:latest
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPOSITORY_DEV }}:latest .
           docker push ${{ secrets.DOCKER_REPOSITORY_DEV }}:latest
 
       - name: Docker build & push to prod
         if: contains(github.ref, 'master')
         run: |
-          docker tag latest ${{ secrets.DOCKER_REPOSITORY_PROD }}:latest
+#          docker tag latest ${{ secrets.DOCKER_REPOSITORY_PROD }}:latest
           docker build -f Dockerfile-prod -t ${{ secrets.DOCKER_REPOSITORY_PROD }}:latest .
           docker push ${{ secrets.DOCKER_REPOSITORY_PROD }}:latest
 
