@@ -102,6 +102,7 @@ jobs:
           host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.USERNAME_PROD }}
           password: ${{ secrets.PASSWORD_PROD }}
+          key: ${{ secrets.NCP_SSH_KEY }}
           port: 22
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
