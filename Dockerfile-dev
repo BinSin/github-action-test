@@ -7,5 +7,5 @@ LABEL project="github-action-dev"
 ADD build/libs/github-action-test.jar github-action-test.jar
 EXPOSE 9000
 RUN sh -c 'touch /github-action-test.jar'
-ENV JAVA_OPTS="-Dspring.profiles.active=dev"
+ENV JAVA_OPTS="-Dspring.profiles.active=dev -Dserver.port=9000"
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /github-action-test.jar"]
