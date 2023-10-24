@@ -84,10 +84,10 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} ${{ secrets.DOCKER_REPOSITORY_DEV }}
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker rm -f $(docker ps --filter label="project=github-action-dev" -q)
-            docker pull ${{ secrets.DOCKER_REPOSITORY_DEV }}
-            docker run -d -v /app_log/github-action-dev:/app_log/github-action-dev -p 8080:8080 ${{ secrets.DOCKER_REPOSITORY_DEV }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
+            docker run -d -v /app_log/github-action-dev:/app_log/github-action-dev -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
             docker image prune -f
 
 ##      - name: Deploy to prod
