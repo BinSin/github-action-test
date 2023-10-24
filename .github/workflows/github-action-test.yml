@@ -57,14 +57,13 @@ jobs:
       - name: Docker image build
         if: contains(github.ref, 'dev')
         run: |
-          docker login docker.io
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPOSITORY }}/dev .
+          docker build -f Dockerfile-dev -t binsin/github-action-test/dev .
 
       - name: DockerHub push
         if: contains(github.ref, 'dev')
         run: |
           docker login docker.io
-          docker push ${{ secrets.DOCKER_REPOSITORY }}/dev
+          docker push binsin/github-action-test/dev
 
 ##      - name: Docker build & push to prod
 ##        if: contains(github.ref, 'master')
