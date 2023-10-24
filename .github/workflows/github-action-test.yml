@@ -81,8 +81,8 @@ jobs:
           host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           password: ${{ secrets.PASSWORD_DEV }}
-          #port: 22
-          #key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          ##key: ${{ secrets.PRIVATE_KEY }}
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} ${{ secrets.DOCKER_REPOSITORY_DEV }}
             docker rm -f $(docker ps --filter label="project=github-action-dev" -q)
