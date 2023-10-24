@@ -62,7 +62,6 @@ jobs:
       - name: DockerHub push
         if: contains(github.ref, 'dev')
         run: |
-          docker tag dev ${{ secrets.DOCKER_REPOSITORY }}/dev
           docker push ${{ secrets.DOCKER_REPOSITORY }}/dev
 
 ##      - name: Docker build & push to prod
