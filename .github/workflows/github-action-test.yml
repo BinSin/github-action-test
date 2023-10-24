@@ -57,13 +57,13 @@ jobs:
       - name: Docker image build
         if: contains(github.ref, 'dev')
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker login docker.io
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPOSITORY }}/dev .
 
       - name: DockerHub push
         if: contains(github.ref, 'dev')
         run: |
-          docker tag github-action-test/dev ${{ secrets.DOCKER_REPOSITORY }}/dev
+          docker login docker.io
           docker push ${{ secrets.DOCKER_REPOSITORY }}/dev
 
 ##      - name: Docker build & push to prod
