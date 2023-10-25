@@ -64,7 +64,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
 
       ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
-      ## deploy to develop
+      ## deploy to prod
       - name: Deploy to prod
         uses: appleboy/ssh-action@master
         id: deploy-prod
@@ -73,7 +73,6 @@ jobs:
           host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.USERNAME_PROD }}
           password: ${{ secrets.PASSWORD_PROD }}
-          key: ${{ secrets.NCP_SSH_KEY }}
           port: 22
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
