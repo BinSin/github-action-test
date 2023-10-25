@@ -1,0 +1,83 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: CI/CD Test
+
+on:
+  push:
+    branches: [ "master" ]
+#    paths-ignore: # 제외할 path
+
+
+permissions:
+  contents: read
+
+jobs:
+  CI-CD-TEST:
+    runs-on: ubuntu-latest
+    steps:
+
+      ## jdk setting
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      ## 빌드 속도 향상을 위한 캐싱 작업
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      ## gradle build
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      ## docker login
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      ## Dockerfile을 통해 이미지를 빌드하고 이를 docker repository 로 push
+      ## docker repository: ${{ secrets.DOCKER_REPOSITORY }}/(repository name)
+      - name: Docker image build to prod
+        if: contains(github.ref, 'master')
+        run: |
+          docker build -f Dockerfile-prod -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_PROD }} .
+
+      - name: DockerHub push to prod
+        if: contains(github.ref, 'master')
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
+
+      ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
+      ## deploy to develop
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        if: contains(github.ref, 'master')
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: ${{ secrets.USERNAME_PROD }}
+          password: ${{ secrets.PASSWORD_PROD }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          port: 22
+          script: |
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull ${{ secrets.DOCKER_REPOSITORY_PROD }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
+            docker rm -f $(docker ps --filter label="project=github-action-prod" -q)
+            docker run -d -v /app_log/github-action-prod:/app_log/github-action-prod -p 9000:9000 ${{ secrets.DOCKER_REPOSITORY_PROD }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
+            docker image prune -f
