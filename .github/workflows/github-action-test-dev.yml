@@ -65,19 +65,19 @@ jobs:
 
       ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
       ## deploy to develop
-      - name: Deploy to prod
+      - name: Deploy to dev
         uses: appleboy/ssh-action@master
-        id: deploy-prod
+        id: deploy-dev
         if: contains(github.ref, 'master')
         with:
-          host: ${{ secrets.HOST_PROD }}
-          username: ${{ secrets.USERNAME_PROD }}
-          password: ${{ secrets.PASSWORD_PROD }}
-          key: ${{ secrets.NCP_SSH_KEY }}
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          password: ${{ secrets.PASSWORD_DEV }}
+          key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_REPOSITORY_PROD }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
-            docker rm -f $(docker ps --filter label="project=github-action-prod" -q)
-            docker run -d -v /app_log/github-action-prod:/app_log/github-action-prod -p 9000:9000 ${{ secrets.DOCKER_REPOSITORY_PROD }}/${{ secrets.DOCKER_REPOSITORY_PROD }}
+            docker pull ${{ secrets.DOCKER_REPOSITORY_DEV }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
+            docker rm -f $(docker ps --filter label="project=github-action-dev" -q)
+            docker run -d -v /app_log/github-action-dev:/app_log/github-action-dev -p 9000:9000 ${{ secrets.DOCKER_REPOSITORY_DEV }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
             docker image prune -f
