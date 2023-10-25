@@ -55,7 +55,6 @@ jobs:
       ## docker repository: ${{ secrets.DOCKER_REPOSITORY }}/(repository name)
       - name: Docker image build to dev
         if: contains(github.ref, 'dev')
-        if: contains(github.ref, 'dev')
         run: |
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }} .
 
