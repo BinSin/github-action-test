@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  CI-CD-TEST:
+  CI-CD-TEST-PROD:
     runs-on: ubuntu-latest
     steps:
 
