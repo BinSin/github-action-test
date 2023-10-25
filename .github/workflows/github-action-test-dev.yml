@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: CI/CD Test
+name: CI/CD Test Dev
 
 on:
   push:
@@ -54,6 +54,7 @@ jobs:
       ## Dockerfile을 통해 이미지를 빌드하고 이를 docker repository 로 push
       ## docker repository: ${{ secrets.DOCKER_REPOSITORY }}/(repository name)
       - name: Docker image build to dev
+        if: contains(github.ref, 'dev')
         if: contains(github.ref, 'dev')
         run: |
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }} .
