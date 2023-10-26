@@ -4,7 +4,7 @@ FROM openjdk:17-alpine
 VOLUME ["/app_log/github-action-dev"]
 LABEL project="github-action-dev"
 
-ADD ../build/libs/github-action-test.jar github-action-test.jar
+ADD ./build/libs/github-action-test.jar github-action-test.jar
 EXPOSE 9000
 RUN sh -c 'touch /github-action-test.jar'
 ENV JAVA_OPTS="-Dspring.profiles.active=dev -Dserver.port=9000"
