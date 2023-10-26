@@ -63,19 +63,6 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
 
-      ## deploy.sh 파일을 서버로 전달
-      - name: Send to deploy.sh
-        uses: appleboy/ssh-action@master
-        if: contains(github.ref, 'dev')
-        with:
-          host: ${{ secrets.HOST_DEV }}
-          username: ${{ secrets.USERNAME_DEV }}
-          password: ${{ secrets.PASSWORD_DEV }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
-          source: "./deploy.sh"
-          target: "/home/github-action-test/"
-
       ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
       ## deploy to develop
       - name: Deploy to dev
@@ -91,6 +78,5 @@ jobs:
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_REPOSITORY_DEV }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
-            chmod 777 /home/github-action-test/deploy.sh
-            /home/github-action-test/deploy.sh
+            ./deploy.sh
             docker image prune -f
