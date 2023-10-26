@@ -1,9 +1,10 @@
 #!/bin/bash
 
-IS_GREEN=$(docker ps | grep green) # 현재 실행중인 App이 blue인지 확인합니다.
+IS_FIRST=$(docker ps | (grep blue & grep green)) # 현재 구동중인 App이 있는지 확인
+IS_GREEN=$(docker ps | grep blue) # 현재 실행중인 App이 blue인지 확인
 DEFAULT_CONF=" /etc/nginx/nginx.conf"
 
-if [ -z $IS_GREEN  ];then # blue라면
+if [ -z $IS_GREEN ];then # blue라면
 
   echo "### BLUE => GREEN ###"
 
@@ -13,22 +14,26 @@ if [ -z $IS_GREEN  ];then # blue라면
   echo "2. green container up"
   docker-compose up -d green # green 컨테이너 실행
 
-  while [ 1 = 1 ]; do
-  echo "3. green health check..."
-  sleep 3
+  if [ -z $IS_FIRST ];then # 해당 조건을 넣지 않으면 처음 구동 시 무한 루프 발생
+      echo "first start"
+  else
+    while [ 1 = 1 ]; do
+      echo "3. green health check..."
+      sleep 3
 
-  REQUEST=$(curl http://127.0.0.1:9000) # green으로 request
-    if [ -n "$REQUEST" ]; then # 서비스 가능하면 health check 중지
-            echo "health check success"
-            break ;
-            fi
-  done;
+      REQUEST=$(curl http://127.0.0.1:9000) # green으로 request
+        if [ -n "$REQUEST" ]; then # 서비스 가능하면 health check 중지
+          echo "health check success"
+          break ;
+        fi
+    done;
+  fi
 
   echo "4. reload nginx"
   sudo cp /etc/nginx/nginx.green.conf $DEFAULT_CONF
-  sleep 5
+  sleep 5 # 복사 후 바로 nginx 재시작하면 에러 발생
 
-  sudo nginx -s rel
+  sudo nginx -s rel # nginx 재시작
 
   echo "5. blue container down"
   docker-compose stop blue
@@ -54,9 +59,9 @@ else
 
   echo "4. reload nginx"
   sudo cp /etc/nginx/nginx.blue.conf $DEFAULT_CONF
-  sleep 5
+  sleep 5 # 복사 후 바로 nginx 재시작하면 에러 발생
 
-  sudo nginx -s reload
+  sudo nginx -s reload # nginx 재시작
 
   echo "5. green container down"
   docker-compose stop green
