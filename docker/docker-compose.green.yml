@@ -5,7 +5,7 @@ services:
   api:
     image: ${{secrets.DOCKER_REPOSITORY_DEV}}/${{secrets.DOCKER_REPOSITORY_DEV}}
 
-    container_name: github-action-test-blue
+    container_name: blue
 
     environment:
       - LANG=ko_KR.UTF-8
