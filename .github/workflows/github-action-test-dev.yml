@@ -73,7 +73,7 @@ jobs:
           password: ${{ secrets.PASSWORD_DEV }}
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
-          source: "script/deploy.sh"
+          source: "./deploy.sh"
           target: "/home/github-action-test/"
 
       ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
