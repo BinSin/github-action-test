@@ -25,7 +25,7 @@ if [ -z $IS_GREEN  ];then # blue라면
   done;
 
   echo "4. reload nginx"
-  sudo cp /etc/nginx/nginx.green.conf /etc/nginx/nginx.conf
+  sudo cp /etc/nginx/nginx.green.conf $DEFAULT_CONF
   sleep 5
 
   sudo nginx -s rel
@@ -53,7 +53,7 @@ else
   done;
 
   echo "4. reload nginx"
-  sudo cp /etc/nginx/nginx.blue.conf /etc/nginx/nginx.conf
+  sudo cp /etc/nginx/nginx.blue.conf $DEFAULT_CONF
   sleep 5
 
   sudo nginx -s reload
