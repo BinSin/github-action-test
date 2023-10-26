@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  api:
+    image: ${{secrets.DOCKER_REPOSITORY_DEV}}/${{secrets.DOCKER_REPOSITORY_DEV}}
+
+    container_name: github-action-test-green
+
+    environment:
+      - LANG=ko_KR.UTF-8
+      - UWSGI_PORT=9000
+
+    ports:
+      - '9000:9000'

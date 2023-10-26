@@ -56,12 +56,26 @@ jobs:
       - name: Docker image build to dev
         if: contains(github.ref, 'dev')
         run: |
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }} .
+          docker build -f docker/Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }} .
 
       - name: DockerHub push to dev
         if: contains(github.ref, 'dev')
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
+
+      ## deploy.sh 파일을 서버로 전달
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        id: deploy-dev
+        if: contains(github.ref, 'master')
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          password: ${{ secrets.PASSWORD_DEV }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          source: "script/deploy.sh"
+          target: "/home/github-action-test"
 
       ## appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고 script를 실행
       ## deploy to develop
@@ -74,10 +88,10 @@ jobs:
           username: ${{ secrets.USERNAME_DEV }}
           password: ${{ secrets.PASSWORD_DEV }}
           key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
+          port:
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_REPOSITORY_DEV }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
-            docker rm -f $(docker ps --filter label="project=github-action-dev" -q)
-            docker run -d -v /app_log/github-action-dev:/app_log/github-action-dev -p 9000:9000 ${{ secrets.DOCKER_REPOSITORY_DEV }}/${{ secrets.DOCKER_REPOSITORY_DEV }}
+            chmod 777 /home/github-action-test/deploy.sh
+            /home/github-action-test/deploy.sh
             docker image prune -f
