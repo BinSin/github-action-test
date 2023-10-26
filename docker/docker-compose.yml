@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  blue:
+    image: binsin/github-action-test-dev
+    container_name: blue
+    environment:
+      - LANG=ko_KR.UTF-8
+      - UWSGI_PORT=9000
+    ports:
+      - '9000:9000'
+  green:
+    image: binsin/github-action-test-dev
+    container_name: green
+    environment:
+      - LANG=ko_KR.UTF-8
+      - UWSGI_PORT=9000
+    ports:
+      - '9001:9000'
