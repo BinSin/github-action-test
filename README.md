@@ -6,17 +6,11 @@
 - Nginx (무중단 배포에 사용)
 
 ## AWS EC2 생성
-
----
-
 - Amazon Linux
 - 스토리지 Size: 30GB
 - 인바운드 규칙: 포트 80, 9000 추가
 
 ## EC Instance Docker 설치
-
----
-
 ```markdown
 // 도커 설치
 sudo yum install docker -y
@@ -65,9 +59,6 @@ sudo dnf install libxcrypt-compat
 
 # 무중단 배포
 ## Nginx 세팅
-
----
-
 - ‘nginx/’ 참고
 - Nginx의 port 설정을 바꿔 간단하게 무중단 배포를 하는 방식으로 진행
 
@@ -129,9 +120,6 @@ sudo service nginx start // nginx 실행
     
 
 ## Docker Compose 작성
-
----
-
 - ‘docker/docker-compose.yml’ 참고
 - docker-compose.yml
     
@@ -159,9 +147,6 @@ sudo service nginx start // nginx 실행
     
 
 ## 실행 스크립트 작성
-
----
-
 - ‘script/’ 참고
 - 무중단 배포를 위한 스크립트 작성을 해야 한다.
 - 서버에 로그인하는 계정의 홈 디렉토리에 deploy.sh 작성
@@ -247,9 +232,6 @@ sudo service nginx start // nginx 실행
     
 
 ## Github Action Workflow 변경
-
----
-
 - ‘.github/workflows/’ 참고
 - Deploy 하는 부분 변경
     - 직접 docker를 실행시키지 않고 deploy.sh 스크립트를 실행하여 nginx에서 바라보는 포트를 변경
